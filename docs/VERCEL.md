@@ -6,9 +6,16 @@ This deploys the Expo **web app**. Native iOS and Android builds continue to use
 
 - Website: https://vitalis-health-fitness.vercel.app
 - Vercel project: https://vercel.com/ravi-teja6/vitalis-health-fitness
+- GitHub repository: https://github.com/Raviteja-medoju/Vitalis-Health-Fitness
 - This workspace is linked to that project through the ignored `.vercel/` directory.
 
-To publish changes from this linked workspace, run `npx --yes vercel@latest --prod`.
+Vercel is connected to the GitHub repository. Commit changes and push `main` to publish updates:
+
+```powershell
+git push origin main
+```
+
+For a manual deployment from this linked workspace, run `npx --yes vercel@latest --prod`.
 
 ## Deploy from this folder
 
