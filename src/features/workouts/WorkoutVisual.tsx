@@ -21,7 +21,7 @@ export function WorkoutVisual({
   category: WorkoutCategory;
   minutes: number;
 }) {
-  const { colors } = useTheme();
+  const { colors, compact } = useTheme();
   const palette = {
     background: colors.artwork[`${category}Bg`],
     ink: colors.artwork[`${category}Ink`],
@@ -34,7 +34,12 @@ export function WorkoutVisual({
       aria-hidden
       style={{ backgroundColor: palette.background, borderRadius: 20, overflow: 'hidden' }}
     >
-      <Svg width="100%" height={150} viewBox="0 0 320 150" preserveAspectRatio="xMidYMid slice">
+      <Svg
+        width="100%"
+        height={compact ? 120 : 150}
+        viewBox="0 0 320 150"
+        preserveAspectRatio="xMidYMid slice"
+      >
         <Path
           d="M169 150C149 121 166 89 179 59C197 18 239-9 274 8C310 27 297 60 326 79L328 153Z"
           fill={palette.ink}
@@ -107,7 +112,15 @@ export function WorkoutVisual({
           </>
         )}
       </Svg>
-      <View style={{ position: 'absolute', top: 18, left: 18, maxWidth: 150, gap: 12 }}>
+      <View
+        style={{
+          position: 'absolute',
+          top: compact ? 12 : 18,
+          left: compact ? 12 : 18,
+          maxWidth: 150,
+          gap: compact ? 8 : 12,
+        }}
+      >
         <Text variant="caption" color={palette.ink} style={{ letterSpacing: 1.4 }}>
           {palette.label}
         </Text>

@@ -9,12 +9,14 @@ import {
 } from 'lucide-react-native';
 import React from 'react';
 import { Platform, useWindowDimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text, useMotionPreference, useTheme } from '@/design-system';
 
 export default function TabsLayout() {
   const { colors, typography } = useTheme();
   const { width, fontScale } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const sidebar = width >= 1000 && fontScale < 1.5;
   const reduceMotion = useMotionPreference();
   return (
@@ -62,7 +64,11 @@ export default function TabsLayout() {
                   borderRightColor: colors.border.default,
                 }
               : Platform.OS === 'web'
-                ? { height: 76, paddingBottom: 10, paddingTop: 10 }
+                ? {
+                    height: 56 + Math.max(8, insets.bottom),
+                    paddingBottom: Math.max(8, insets.bottom),
+                    paddingTop: 6,
+                  }
                 : { paddingTop: 6 }),
           },
           tabBarItemStyle: {

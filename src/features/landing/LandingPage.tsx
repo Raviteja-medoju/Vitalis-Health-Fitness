@@ -55,7 +55,7 @@ const FEATURES = [
 
 /** Public introduction shared by the home route and existing welcome links. */
 export default function LandingPage() {
-  const { colors, elevation } = useTheme();
+  const { colors, elevation, compact } = useTheme();
   const { width, height, fontScale } = useWindowDimensions();
   const reduced = useMotionPreference();
   const scrollY = useSharedValue(0);
@@ -77,7 +77,7 @@ export default function LandingPage() {
           ],
     };
   }, [reduced, wide]);
-  const ringSize = Math.min(210, width - 136);
+  const ringSize = compact ? Math.min(152, width - 112) : Math.min(210, width - 136);
   const completed = useOnboardingStore((s) => s.completed);
   const start = useOnboardingStore((s) => s.start);
   const analytics = useAnalytics();
@@ -112,10 +112,10 @@ export default function LandingPage() {
   const cta = completed ? 'Open my dashboard' : 'Get started';
   const headline = {
     fontFamily: fontFamilies.editorial,
-    fontSize: wide ? 72 : 46,
-    lineHeight: wide ? 78 : 52,
+    fontSize: compact ? (width < 360 ? 34 : 38) : wide ? 72 : 46,
+    lineHeight: compact ? (width < 360 ? 39 : 43) : wide ? 78 : 52,
     fontWeight: '400' as const,
-    letterSpacing: -1.8,
+    letterSpacing: compact ? -0.8 : -1.8,
   };
 
   return (
@@ -127,13 +127,25 @@ export default function LandingPage() {
       style={{ flex: 1, backgroundColor: colors.bg.canvas }}
       contentContainerStyle={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
     >
-      <View style={[styles.container, { paddingHorizontal: wide ? 48 : 24 }]}>
-        <View style={[styles.nav, { borderBottomColor: colors.border.default }]}>
+      <View style={[styles.container, { paddingHorizontal: compact ? 16 : wide ? 48 : 24 }]}>
+        <View
+          style={[
+            styles.nav,
+            compact && { paddingVertical: 14, gap: 12 },
+            { borderBottomColor: colors.border.default },
+          ]}
+        >
           <View style={styles.brand}>
-            <View style={[styles.logo, { backgroundColor: colors.action.primary }]}>
-              <Activity size={24} color={colors.fg.onBrand} />
+            <View
+              style={[
+                styles.logo,
+                compact && { width: 32, height: 32, borderRadius: 10 },
+                { backgroundColor: colors.action.primary },
+              ]}
+            >
+              <Activity size={compact ? 20 : 24} color={colors.fg.onBrand} />
             </View>
-            <Text style={styles.wordmark}>
+            <Text style={[styles.wordmark, compact && { fontSize: 26, lineHeight: 32 }]}>
               vitalis<Text color="brand">.</Text>
             </Text>
           </View>
@@ -146,10 +158,14 @@ export default function LandingPage() {
         <View
           style={[
             styles.hero,
-            { flexDirection: wide ? 'row' : 'column', paddingVertical: wide ? 76 : 40 },
+            {
+              flexDirection: wide ? 'row' : 'column',
+              paddingVertical: compact ? 28 : wide ? 76 : 40,
+            },
+            compact && { gap: 28 },
           ]}
         >
-          <View style={[styles.heroCopy, wide && { flex: 1.1 }]}>
+          <View style={[styles.heroCopy, compact && { gap: 16 }, wide && { flex: 1.1 }]}>
             <View style={[styles.eyebrow, { backgroundColor: colors.bg.brandSubtle }]}>
               <Leaf size={15} color={colors.fg.brand} />
               <Text variant="label" color="brand">
@@ -162,12 +178,20 @@ export default function LandingPage() {
                 Start small.
               </Text>
             </Text>
-            <Text color="secondary" style={styles.intro}>
+            <Text
+              color="secondary"
+              style={[styles.intro, compact && { fontSize: 16, lineHeight: 24 }]}
+            >
               Your healthier day starts here. Bring movement, mindful habits, and a little guidance
               together with Vitalis.
             </Text>
             <View style={styles.ctas}>
-              <Button label={cta} size="lg" rightIcon={ArrowRight} onPress={getStarted} />
+              <Button
+                label={cta}
+                size={compact ? 'md' : 'lg'}
+                rightIcon={ArrowRight}
+                onPress={getStarted}
+              />
               <Button
                 label="Explore Vitalis"
                 variant="ghost"
@@ -209,6 +233,7 @@ export default function LandingPage() {
               <View
                 style={[
                   styles.previewStage,
+                  compact && { padding: 14, gap: 12, borderRadius: 24 },
                   { backgroundColor: colors.bg.brandSubtle },
                   elevation.md,
                 ]}
@@ -228,6 +253,7 @@ export default function LandingPage() {
                 <View
                   style={[
                     styles.dashboard,
+                    compact && { padding: 14, gap: 12, borderRadius: 18 },
                     { backgroundColor: colors.bg.surface, borderColor: colors.border.default },
                   ]}
                 >
@@ -337,7 +363,18 @@ export default function LandingPage() {
           </Animated.View>
         </View>
 
-        <View style={[styles.pillars, { borderColor: colors.border.default }]}>
+        <View
+          style={[
+            styles.pillars,
+            compact && {
+              gap: 14,
+              paddingVertical: 20,
+              alignItems: 'flex-start',
+              flexDirection: 'column',
+            },
+            { borderColor: colors.border.default },
+          ]}
+        >
           {[
             { icon: Activity, label: 'Move with purpose' },
             { icon: Leaf, label: 'Build better habits' },
@@ -356,23 +393,33 @@ export default function LandingPage() {
           scrollY={scrollY}
           viewportHeight={height}
           onLayout={(event) => setFeatureY(event.nativeEvent.layout.y)}
-          style={styles.features}
+          style={[styles.features, compact && { paddingVertical: 32, gap: 12 }]}
         >
           <Text variant="label" color="brand" style={styles.kicker}>
             LESS OVERWHELM. MORE EVERYDAY PROGRESS.
           </Text>
-          <Text heading={2} style={styles.sectionTitle}>
+          <Text
+            heading={2}
+            style={[styles.sectionTitle, compact && { fontSize: 28, lineHeight: 34 }]}
+          >
             Wellness that fits your life.
           </Text>
           <Text color="secondary" style={{ maxWidth: 580 }}>
             You don’t need to change everything at once. Just find your next small step.
           </Text>
-          <View style={[styles.featureGrid, { flexDirection: wide ? 'row' : 'column' }]}>
+          <View
+            style={[
+              styles.featureGrid,
+              compact && { gap: 20, marginTop: 12 },
+              { flexDirection: wide ? 'row' : 'column' },
+            ]}
+          >
             {FEATURES.map(({ icon: Icon, number, title, body }) => (
               <View
                 key={number}
                 style={[
                   styles.feature,
+                  compact && { paddingTop: 16, gap: 12 },
                   { borderTopColor: colors.border.default },
                   wide && { flex: 1 },
                 ]}
@@ -399,18 +446,39 @@ export default function LandingPage() {
           <MovementExplorer onStart={getStarted} />
         </ScrollReveal>
 
-        <View style={[styles.closing, { backgroundColor: colors.bg.brandSubtle }]}>
-          <Text heading={2} style={styles.sectionTitle} align="center">
+        <View
+          style={[
+            styles.closing,
+            compact && { paddingVertical: 28, paddingHorizontal: 16, gap: 16 },
+            { backgroundColor: colors.bg.brandSubtle },
+          ]}
+        >
+          <Text
+            heading={2}
+            style={[styles.sectionTitle, compact && { fontSize: 28, lineHeight: 34 }]}
+            align="center"
+          >
             Your pace. Your goals. Your Vitalis.
           </Text>
           <Text color="secondary" align="center">
             Choose what matters to you. We’ll help you make a start.
           </Text>
           <View style={{ alignItems: 'center' }}>
-            <Button label={cta} rightIcon={ArrowRight} size="lg" onPress={getStarted} />
+            <Button
+              label={cta}
+              rightIcon={ArrowRight}
+              size={compact ? 'md' : 'lg'}
+              onPress={getStarted}
+            />
           </View>
         </View>
-        <View style={[styles.footer, { borderTopColor: colors.border.default }]}>
+        <View
+          style={[
+            styles.footer,
+            compact && { marginTop: 28, paddingVertical: 20 },
+            { borderTopColor: colors.border.default },
+          ]}
+        >
           <Text variant="bodyStrong">vitalis.</Text>
           <Text variant="caption" color="secondary">
             Small wins, every day.

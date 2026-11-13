@@ -118,6 +118,17 @@ export const typography: Record<TypographyVariant, TypeStyle> = {
   },
 };
 
+// Keep reading text and form fields at 16px; scale down editorial headings and metrics on phones.
+const compactTypography: typeof typography = {
+  ...typography,
+  display: { ...typography.display, fontSize: 28, lineHeight: 33 },
+  title: { ...typography.title, fontSize: 24, lineHeight: 29 },
+  headline: { ...typography.headline, fontSize: 20, lineHeight: 26 },
+  subhead: { ...typography.subhead, fontSize: 17, lineHeight: 23 },
+  metric: { ...typography.metric, fontSize: 36, lineHeight: 42 },
+  metricSm: { ...typography.metricSm, fontSize: 20, lineHeight: 24 },
+};
+
 export const spacing = primitive.space;
 export const radii = primitive.radius;
 export const sizes = primitive.size;
@@ -152,6 +163,7 @@ export const elevation = {
 
 export interface Theme {
   scheme: ColorScheme;
+  compact: boolean;
   isDark: boolean;
   colors: SemanticColors;
   spacing: typeof spacing;
@@ -163,15 +175,16 @@ export interface Theme {
   component: typeof componentTokens;
 }
 
-export function createTheme(scheme: ColorScheme): Theme {
+export function createTheme(scheme: ColorScheme, compact = false): Theme {
   return {
     scheme,
+    compact,
     isDark: scheme === 'dark',
     colors: semanticColors[scheme],
     spacing,
     radii,
     sizes,
-    typography,
+    typography: compact ? compactTypography : typography,
     motion: motionTokens,
     elevation,
     component: componentTokens,

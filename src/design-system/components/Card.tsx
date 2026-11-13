@@ -39,7 +39,7 @@ export function Card({
   children,
   ...rest
 }: CardProps) {
-  const { colors, component, elevation } = useTheme();
+  const { colors, component, elevation, compact } = useTheme();
   const press = usePressScale(0.985);
   const [focused, setFocused] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -53,10 +53,11 @@ export function Card({
 
   const base: ViewStyle = {
     backgroundColor: bg,
-    borderRadius: component.card.radius,
-    borderTopRightRadius: component.card.radius + 8,
-    borderBottomLeftRadius: component.card.radius + 8,
-    padding: padding ?? component.card.padding,
+    minWidth: 0,
+    borderRadius: compact ? 18 : component.card.radius,
+    borderTopRightRadius: compact ? 24 : component.card.radius + 8,
+    borderBottomLeftRadius: compact ? 24 : component.card.radius + 8,
+    padding: padding ?? (compact ? 14 : component.card.padding),
     borderWidth: 1,
     borderColor: focused
       ? colors.border.focus

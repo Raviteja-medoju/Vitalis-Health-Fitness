@@ -35,7 +35,7 @@ const CHAPTERS = {
 type Chapter = keyof typeof CHAPTERS;
 
 export function WellnessStory({ onStart }: { onStart: () => void }) {
-  const { colors, elevation } = useTheme();
+  const { colors, elevation, compact } = useTheme();
   const reduced = useMotionPreference();
   const [chapter, setChapter] = useState<Chapter>('move');
   const phase = useSharedValue(1);
@@ -62,7 +62,7 @@ export function WellnessStory({ onStart }: { onStart: () => void }) {
   );
   const current = CHAPTERS[chapter];
   return (
-    <View style={{ gap: 28, paddingVertical: 40 }}>
+    <View style={{ gap: compact ? 20 : 28, paddingVertical: compact ? 28 : 40 }}>
       <View style={{ gap: 12, alignItems: 'center' }}>
         <Text variant="label" color="brand" style={{ letterSpacing: 1.5 }}>
           ONE DAY. THREE WAYS TO FEEL BETTER.
@@ -85,16 +85,24 @@ export function WellnessStory({ onStart }: { onStart: () => void }) {
       <View
         style={{
           backgroundColor: colors.artwork.strengthBg,
-          borderRadius: 32,
-          padding: 24,
+          borderRadius: compact ? 24 : 32,
+          padding: compact ? 16 : 24,
           flexDirection: 'row',
           flexWrap: 'wrap',
-          gap: 32,
+          gap: compact ? 20 : 32,
           alignItems: 'center',
           overflow: 'hidden',
         }}
       >
-        <View style={{ flexGrow: 1, flexShrink: 1, flexBasis: 280, minWidth: 0, gap: 24 }}>
+        <View
+          style={{
+            flexGrow: 1,
+            flexShrink: 1,
+            flexBasis: 280,
+            minWidth: 0,
+            gap: compact ? 16 : 24,
+          }}
+        >
           <Text variant="label" color={colors.artwork.strengthInk}>
             THE DAILY EDIT / {current.number}
           </Text>
@@ -111,7 +119,15 @@ export function WellnessStory({ onStart }: { onStart: () => void }) {
             onPress={onStart}
           />
         </View>
-        <View style={{ flexGrow: 1, flexShrink: 1, flexBasis: 320, minWidth: 0, padding: 12 }}>
+        <View
+          style={{
+            flexGrow: 1,
+            flexShrink: 1,
+            flexBasis: 320,
+            minWidth: 0,
+            padding: compact ? 0 : 12,
+          }}
+        >
           <View
             pointerEvents="none"
             aria-hidden
@@ -132,8 +148,15 @@ export function WellnessStory({ onStart }: { onStart: () => void }) {
           <DepthSurface>
             <Animated.View testID="wellness-chapter" style={turn}>
               <Card
-                padding={20}
-                style={[{ gap: 20, minHeight: 310, justifyContent: 'center' }, elevation.md]}
+                padding={compact ? 14 : 20}
+                style={[
+                  {
+                    gap: compact ? 14 : 20,
+                    minHeight: compact ? 250 : 310,
+                    justifyContent: 'center',
+                  },
+                  elevation.md,
+                ]}
               >
                 {chapter === 'move' ? (
                   <>

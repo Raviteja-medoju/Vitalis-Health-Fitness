@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, useWindowDimensions } from 'react-native';
 
 import { createTheme, lightTheme, type ColorScheme, type Theme } from './theme';
 
@@ -30,6 +30,8 @@ export function ThemeProvider({
   initialPreference?: ThemePreference;
 }) {
   const system = useColorScheme();
+  const { width } = useWindowDimensions();
+  const compact = width < 600;
   const [preference, setPreferenceState] = useState<ThemePreference>(initialPreference ?? 'system');
   const [ready, setReady] = useState(Boolean(initialPreference));
 
@@ -58,8 +60,8 @@ export function ThemeProvider({
     preference === 'system' ? (system === 'dark' ? 'dark' : 'light') : preference;
 
   const value = useMemo<ThemeContextValue>(
-    () => ({ theme: createTheme(scheme), preference, setPreference, ready }),
-    [scheme, preference, setPreference, ready],
+    () => ({ theme: createTheme(scheme, compact), preference, setPreference, ready }),
+    [scheme, compact, preference, setPreference, ready],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

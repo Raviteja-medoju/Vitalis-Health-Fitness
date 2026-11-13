@@ -39,7 +39,7 @@ export function Screen({
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const maxWidth = wide ? 1120 : 680;
-  const gutter = width < 380 ? 16 : width < 768 ? 24 : 32;
+  const gutter = width < 600 ? 16 : width < 768 ? 24 : 32;
 
   const pad: ViewStyle = {
     paddingHorizontal: padded ? gutter : 0,
@@ -53,7 +53,7 @@ export function Screen({
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
       contentInsetAdjustmentBehavior="automatic"
-      style={[{ flex: 1 }, style]}
+      style={[{ flex: 1, minWidth: 0 }, style]}
       contentContainerStyle={[
         pad,
         { width: '100%', maxWidth, alignSelf: 'center', flexGrow: 1 },

@@ -15,12 +15,12 @@ import { WORKOUTS, type WorkoutCategory } from '@/features/workouts/catalog';
 import { WorkoutVisual } from '@/features/workouts/WorkoutVisual';
 
 export function MovementExplorer({ onStart }: { onStart: () => void }) {
-  const { colors } = useTheme();
+  const { colors, compact } = useTheme();
   const reduced = useMotionPreference();
   const [category, setCategory] = useState<WorkoutCategory>('strength');
   const workout = WORKOUTS.find((item) => item.category === category)!;
   return (
-    <View style={{ gap: 24, paddingBottom: 48 }}>
+    <View style={{ gap: compact ? 16 : 24, paddingBottom: compact ? 32 : 48 }}>
       <View style={{ gap: 12 }}>
         <Text variant="label" color="brand" style={{ letterSpacing: 1.5 }}>
           A LITTLE TIME. A LOT OF POSSIBILITY.

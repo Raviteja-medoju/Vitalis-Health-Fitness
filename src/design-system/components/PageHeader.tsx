@@ -16,7 +16,7 @@ export function PageHeader({
   eyebrow?: string;
   action?: React.ReactNode;
 }) {
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, compact } = useTheme();
   return (
     <View
       style={{
@@ -24,8 +24,8 @@ export function PageHeader({
         flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: spacing['4'],
-        paddingBottom: spacing['5'],
+        gap: compact ? spacing['3'] : spacing['4'],
+        paddingBottom: compact ? spacing['4'] : spacing['5'],
         borderBottomWidth: 1,
         borderColor: colors.border.default,
       }}
@@ -36,7 +36,7 @@ export function PageHeader({
           flexShrink: 1,
           flexBasis: 180,
           minWidth: 0,
-          gap: spacing['2'],
+          gap: compact ? spacing['1'] : spacing['2'],
         }}
       >
         {eyebrow ? (
@@ -57,7 +57,7 @@ export function PageHeader({
           </Text>
         ) : null}
       </View>
-      {action ?? <BotanicalMark size={52} />}
+      {action ?? <BotanicalMark size={compact ? 36 : 52} />}
     </View>
   );
 }

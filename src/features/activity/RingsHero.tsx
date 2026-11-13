@@ -1,6 +1,6 @@
 import { Droplets, Flame, Footprints } from 'lucide-react-native';
 import React from 'react';
-import { View } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 
 import { Card, Icon, ProgressRing, Text, useTheme } from '@/design-system';
 import { formatNumber } from '@/lib/date';
@@ -15,12 +15,13 @@ interface Props {
 
 /** Three concentric rings: steps (move), active minutes (energy), water (hydration). */
 export function RingsHero({ metrics, targets }: Props) {
-  const { colors, spacing, component } = useTheme();
+  const { colors, spacing, component, compact } = useTheme();
+  const { width } = useWindowDimensions();
   const steps = metrics.steps / targets.steps;
   const active = metrics.activeMinutes / targets.activeMinutes;
   const water = metrics.waterMl / targets.waterMl;
-  const big = component.ring.sizeLg + 20;
-  const sw = component.ring.strokeWidth;
+  const big = compact ? (width < 360 ? 112 : 132) : component.ring.sizeLg + 20;
+  const sw = compact ? 8 : component.ring.strokeWidth;
 
   const legend = [
     {
@@ -62,7 +63,7 @@ export function RingsHero({ metrics, targets }: Props) {
             flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: spacing['4'],
+            gap: compact ? spacing['3'] : spacing['4'],
             flexGrow: 1,
           }}
         >
@@ -104,7 +105,7 @@ export function RingsHero({ metrics, targets }: Props) {
             </View>
           </View>
           <View
-            style={{ flex: 1, minWidth: 130, gap: spacing['3'] }}
+            style={{ flex: 1, minWidth: compact ? 116 : 130, gap: spacing['3'] }}
             importantForAccessibility="no-hide-descendants"
             accessibilityElementsHidden
           >
