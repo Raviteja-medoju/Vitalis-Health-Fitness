@@ -6,6 +6,7 @@ import {
   MessageCircleHeart,
   Salad,
   UserRound,
+  type LucideIcon,
 } from 'lucide-react-native';
 import React from 'react';
 import { Platform, useWindowDimensions, View } from 'react-native';
@@ -18,12 +19,42 @@ export default function TabsLayout() {
   const { width, fontScale } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const sidebar = width >= 1000 && fontScale < 1.5;
+  const compactWebTabs = Platform.OS === 'web' && !sidebar;
   const reduceMotion = useMotionPreference();
   const tabLabelLineHeight = 16;
-  const bottomPadding = Math.max(8, insets.bottom);
-  // Reserve the router's 28px icon wrapper, scaled label, 10px item padding,
-  // and space for the bar's top padding and border. Safe-area padding is extra.
-  const bottomContentHeight = 28 + Math.ceil(tabLabelLineHeight * Math.max(1, fontScale)) + 18;
+  const iconWrapperHeight = compactWebTabs ? 24 : 28;
+  const topPadding = compactWebTabs ? 4 : 6;
+  const bottomPadding = Math.max(compactWebTabs ? 6 : 8, insets.bottom);
+  // Keep the label and router's 10px item padding inside the touch target.
+  // The smaller browser icon saves space without squeezing the label again.
+  const bottomContentHeight =
+    iconWrapperHeight +
+    Math.ceil(tabLabelLineHeight * Math.max(1, fontScale)) +
+    10 +
+    topPadding +
+    2;
+  const renderTabIcon = (
+    Icon: LucideIcon,
+    color: React.ComponentProps<LucideIcon>['color'],
+    size: number,
+    focused: boolean,
+  ) =>
+    compactWebTabs ? (
+      <View
+        style={{
+          width: 32,
+          height: iconWrapperHeight,
+          borderRadius: 12,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: focused ? colors.bg.brandSubtle : 'transparent',
+        }}
+      >
+        <Icon color={color} size={20} />
+      </View>
+    ) : (
+      <Icon color={color} size={size} />
+    );
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg.canvas }}>
       {sidebar ? (
@@ -53,7 +84,7 @@ export default function TabsLayout() {
           tabBarLabelPosition: sidebar ? 'beside-icon' : 'below-icon',
           tabBarHideOnKeyboard: true,
           animation: reduceMotion ? 'none' : 'fade',
-          tabBarActiveBackgroundColor: colors.bg.brandSubtle,
+          tabBarActiveBackgroundColor: compactWebTabs ? 'transparent' : colors.bg.brandSubtle,
           tabBarActiveTintColor: colors.fg.brand,
           tabBarInactiveTintColor: colors.fg.muted,
           tabBarStyle: {
@@ -71,7 +102,7 @@ export default function TabsLayout() {
               : {
                   height: bottomContentHeight + bottomPadding,
                   paddingBottom: bottomPadding,
-                  paddingTop: 6,
+                  paddingTop: topPadding,
                 }),
           },
           tabBarItemStyle: {
@@ -85,7 +116,12 @@ export default function TabsLayout() {
             ...(!sidebar ? { lineHeight: tabLabelLineHeight, flexShrink: 0 } : null),
             ...(Platform.OS === 'web' ? { fontFamily: 'system-ui' } : null),
           },
-          tabBarIconStyle: !sidebar ? { flexShrink: 0 } : undefined,
+          tabBarIconStyle: !sidebar
+            ? {
+                flexShrink: 0,
+                ...(compactWebTabs ? { width: 32, height: iconWrapperHeight } : null),
+              }
+            : undefined,
           sceneStyle: { backgroundColor: colors.bg.canvas },
         }}
       >
@@ -94,7 +130,7 @@ export default function TabsLayout() {
           options={{
             title: 'Today',
             tabBarAccessibilityLabel: 'Today, tab',
-            tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+            tabBarIcon: ({ color, size, focused }) => renderTabIcon(Home, color, size, focused),
           }}
         />
         <Tabs.Screen
@@ -102,7 +138,7 @@ export default function TabsLayout() {
           options={{
             title: 'Workouts',
             tabBarAccessibilityLabel: 'Workouts, tab',
-            tabBarIcon: ({ color, size }) => <Dumbbell color={color} size={size} />,
+            tabBarIcon: ({ color, size, focused }) => renderTabIcon(Dumbbell, color, size, focused),
           }}
         />
         <Tabs.Screen
@@ -110,7 +146,8 @@ export default function TabsLayout() {
           options={{
             title: 'Coach',
             tabBarAccessibilityLabel: 'Coach, tab',
-            tabBarIcon: ({ color, size }) => <MessageCircleHeart color={color} size={size} />,
+            tabBarIcon: ({ color, size, focused }) =>
+              renderTabIcon(MessageCircleHeart, color, size, focused),
           }}
         />
         <Tabs.Screen
@@ -118,7 +155,7 @@ export default function TabsLayout() {
           options={{
             title: 'Nutrition',
             tabBarAccessibilityLabel: 'Nutrition, tab',
-            tabBarIcon: ({ color, size }) => <Salad color={color} size={size} />,
+            tabBarIcon: ({ color, size, focused }) => renderTabIcon(Salad, color, size, focused),
           }}
         />
         <Tabs.Screen
@@ -126,7 +163,8 @@ export default function TabsLayout() {
           options={{
             title: 'You',
             tabBarAccessibilityLabel: 'Profile and settings, tab',
-            tabBarIcon: ({ color, size }) => <UserRound color={color} size={size} />,
+            tabBarIcon: ({ color, size, focused }) =>
+              renderTabIcon(UserRound, color, size, focused),
           }}
         />
       </Tabs>
