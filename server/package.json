@@ -1,0 +1,19 @@
+{
+  "name": "vitalis-coach-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend for the Vitalis AI coach. Holds the Anthropic API key and streams replies to the app as SSE.",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "node index.mjs",
+    "dev": "node --watch --env-file=.env index.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20.6"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}

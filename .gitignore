@@ -39,3 +39,16 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# local env
+.env
+.env.local
+server/.env
+coverage/
+
+# Vercel local project link and downloaded environment settings
+.vercel/
+
+.env*
+!.env.example
+!**/.env.example
