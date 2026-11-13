@@ -19,6 +19,11 @@ export default function TabsLayout() {
   const insets = useSafeAreaInsets();
   const sidebar = width >= 1000 && fontScale < 1.5;
   const reduceMotion = useMotionPreference();
+  const tabLabelLineHeight = 16;
+  const bottomPadding = Math.max(8, insets.bottom);
+  // Reserve the router's 28px icon wrapper, scaled label, 10px item padding,
+  // and space for the bar's top padding and border. Safe-area padding is extra.
+  const bottomContentHeight = 28 + Math.ceil(tabLabelLineHeight * Math.max(1, fontScale)) + 18;
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg.canvas }}>
       {sidebar ? (
@@ -63,13 +68,11 @@ export default function TabsLayout() {
                   paddingHorizontal: 12,
                   borderRightColor: colors.border.default,
                 }
-              : Platform.OS === 'web'
-                ? {
-                    height: 56 + Math.max(8, insets.bottom),
-                    paddingBottom: Math.max(8, insets.bottom),
-                    paddingTop: 6,
-                  }
-                : { paddingTop: 6 }),
+              : {
+                  height: bottomContentHeight + bottomPadding,
+                  paddingBottom: bottomPadding,
+                  paddingTop: 6,
+                }),
           },
           tabBarItemStyle: {
             borderRadius: 14,
@@ -79,8 +82,10 @@ export default function TabsLayout() {
           tabBarLabelStyle: {
             fontSize: width < 360 ? 11 : typography.caption.fontSize,
             fontWeight: '600',
+            ...(!sidebar ? { lineHeight: tabLabelLineHeight, flexShrink: 0 } : null),
             ...(Platform.OS === 'web' ? { fontFamily: 'system-ui' } : null),
           },
+          tabBarIconStyle: !sidebar ? { flexShrink: 0 } : undefined,
           sceneStyle: { backgroundColor: colors.bg.canvas },
         }}
       >
